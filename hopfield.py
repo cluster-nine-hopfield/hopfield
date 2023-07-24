@@ -1,3 +1,6 @@
+import random
+import numpy as np 
+
 class Hopfield:
     def __init__(self, n) -> None:
-        pass
+        nodes = np.random.rand(n)
