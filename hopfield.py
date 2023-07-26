@@ -8,12 +8,12 @@ class Hopfield:
     # values = n x 1 vector of values
     def __init__(self, n=3, weights=None, values=None) -> None:
         if weights is None:
-            self.weights = np.random.choice([-1, 1], size=(n -  1, n - 1))
+            self.weights = np.random.choice([-1, 1], size=(n, n))
             self.weights = (
                 np.tril(self.weights) + np.tril(self.weights, -1).T
             )  # makes the matrix diagonal
-            for _ in range(n):
-                self.weights[n][n] = 0  # nodes don't input to themselves
+            for i in range(n):
+                self.weights[i][i] = 0  # nodes don't input to themselves
         else:
             self.weights = np.array(weights)  # making sure it's the np object
         if values is None:
@@ -42,6 +42,6 @@ class Hopfield:
         return outputs
 
 
-test = Hopfield(3, [[0, -1, -1], [-1, 0, 1], [-1, 1, 0]], [1, 1, -1])
+test = Hopfield(3)
 print(test.do_instantaneous_update())
 print(test.do_instantaneous_update())
