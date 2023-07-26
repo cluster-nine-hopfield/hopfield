@@ -53,9 +53,14 @@ class Hopfield:
             outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
         return outputs
     
+    def is_steady(self):
+        new = Hopfield(self.n, self.weights, self.values)
+        new.do_synchronous_update()
+        return np.array_equal(self.values,new.values)
+    
 
 
 test = Hopfield(3)
-print(test.is_steady)
-print(test.do_instantaneous_update())
-print(test.do_instantaneous_update())
+print(test.is_steady())
+print(test.do_synchronous_update())
+print(test.do_synchronous_update())
