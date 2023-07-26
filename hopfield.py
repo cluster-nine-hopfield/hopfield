@@ -52,3 +52,8 @@ class Hopfield:
         for node_input in node_inputs:
             outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
         return outputs
+    
+    def is_steady(self):
+        new = Hopfield(self.n, self.weights, self.values)
+        new.do_synchronous_update()
+        return np.array_equal(self.values,new.values)
