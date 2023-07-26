@@ -1,4 +1,3 @@
-import random
 import numpy as np 
 
 # Hopfield network
@@ -7,7 +6,6 @@ class Hopfield:
     # weights = n x n matrix of weights
     # values = n x 1 vector of values
     def __init__(self, n = 3, weights = None, values = None) -> None:
-        # n^2 = number of nodes in the network 
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n,n))
             self.weights = np.tril(self.weights) + np.tril(self.weights, -1).T # makes the matrix diagonal
