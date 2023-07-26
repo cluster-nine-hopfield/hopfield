@@ -40,8 +40,10 @@ class Hopfield:
         for node_input in node_inputs:
             outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
         return outputs
+    
 
 
 test = Hopfield(3)
+print(test.is_steady)
 print(test.do_instantaneous_update())
 print(test.do_instantaneous_update())
