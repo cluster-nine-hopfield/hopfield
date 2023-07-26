@@ -59,3 +59,4 @@ class Hopfield:
         new = Hopfield(self.n, self.weights, self.values)
         new.do_synchronous_update()
         return np.array_equal(self.values, new.values)
+ 
