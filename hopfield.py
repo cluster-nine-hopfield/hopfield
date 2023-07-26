@@ -22,7 +22,7 @@ class Hopfield:
             self.values = np.array(values)  # making sure it's the np object
         self.n = n
 
-    def do_instantaneous_update(self):
+    def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
         self.values = self.convert_node_inputs_to_outputs(node_inputs)
         return self.values
@@ -34,6 +34,18 @@ class Hopfield:
             node_input
         )[0]
         return self.values[index_of_node_to_update]
+
+    def update_node(self, node_index):
+        node_input = self.values @ self.weights[node_index]
+        self.values[node_index] = self.convert_node_inputs_to_outputs(node_input)[0]
+        return self.values[node_index]
+
+    def update_nodes(self, list_of_node_indexes):
+        node_inputs = self.values @ [self.weights[node_index] for node_index in list_of_node_indexes]
+        node_outputs = self.convert_node_inputs_to_outputs(node_inputs)
+        for i in range(len(list_of_node_indexes)):
+            self.values[list_of_node_indexes[i]] = node_outputs[i]
+        return node_outputs
 
     def convert_node_inputs_to_outputs(self, node_inputs):
         outputs = []
