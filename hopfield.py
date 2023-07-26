@@ -41,7 +41,9 @@ class Hopfield:
         return self.values[node_index]
 
     def update_nodes(self, list_of_node_indexes):
-        node_inputs = self.values @ [self.weights[node_index] for node_index in list_of_node_indexes]
+        node_inputs = self.values @ [
+            self.weights[node_index] for node_index in list_of_node_indexes
+        ]
         node_outputs = self.convert_node_inputs_to_outputs(node_inputs)
         for i in range(len(list_of_node_indexes)):
             self.values[list_of_node_indexes[i]] = node_outputs[i]
@@ -52,8 +54,8 @@ class Hopfield:
         for node_input in node_inputs:
             outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
         return outputs
-    
+
     def is_steady(self):
         new = Hopfield(self.n, self.weights, self.values)
         new.do_synchronous_update()
-        return np.array_equal(self.values,new.values)
+        return np.array_equal(self.values, new.values)
