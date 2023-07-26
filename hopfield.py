@@ -6,7 +6,6 @@ class Hopfield:
     # n = number of nodes in the network
     # weights = n x n matrix of weights
     # values = n x 1 vector of values
-
     def __init__(self, n = 3, weights = None, values = None) -> None:
         # n^2 = number of nodes in the network 
         if weights is None:
