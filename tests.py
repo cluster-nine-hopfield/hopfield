@@ -8,17 +8,17 @@ from hopfield import *
 
 
 # test initialization from image
-test = Hopfield.from_image("network.png")
+test = Hopfield.from_image("pixil-frame-0.png")
 test.display()
 test.perturb(10)
+test.display()
 test.do_synchronous_update()
 test.display()
-test.display()
-print(test.values)
-print(test.values.shape)
-print(test.values.size)
-print(test.weights.shape)
-print(test.weights.size)
-print(test.is_steady())
+# print(test.values)
+# print(test.values.shape)
+# print(test.values.size)
+# print(test.weights.shape)
+# print(test.weights.size)
+# print(test.is_steady())
 
 
