@@ -8,7 +8,8 @@ class Hopfield:
     # n = number of nodes in the network
     # weights = n x n matrix of weights
     # values = n x 1 vector of values
-    def __init__(self, n=3, weights=None, values=None) -> None:
+    def __init__(self, shape=(5, 5), weights=None, values=None) -> None:
+        n = shape[0] * shape[1]
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n, n))
             self.weights = (
@@ -23,6 +24,7 @@ class Hopfield:
         else:
             self.values = np.array(values)  # making sure it's the np object
         self.n = n
+        self.shape = shape
 
     def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
@@ -55,7 +57,7 @@ class Hopfield:
         outputs = []
         for node_input in node_inputs:
             outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
-        return outputs
+        return np.array(outputs)
 
     def is_steady(self):
         new = Hopfield(self.n, self.weights, self.values)
@@ -90,7 +92,7 @@ class Hopfield:
     def from_image(cls, img):
         shape, values = cls.convert_image_to_values(img)
         weights = cls.generate_weights_from_values(values)
-        return cls(shape[0] * shape[1], weights, values)
+        return cls(shape, weights, values)
 
     @staticmethod
     def convert_image_to_values(img):
