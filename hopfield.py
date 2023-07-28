@@ -71,7 +71,6 @@ class Hopfield:
         else:
             square = np.reshape(self.values, (int(sqrt(vals)),int(sqrt(vals))))
 
-
             square = ((square * -1 + 1)/2 * 255).astype(np.uint8)
             print(square)
             img = Image.fromarray(square)
@@ -83,16 +82,24 @@ class Hopfield:
             for j in range(n):
                 self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
 
-            
-def image_nodes(img):
-    image = Image.open(img)
-    image = image.resize((28,28))
 
-    array = asarray(image)
-    array = (array > 127) * -1 + 1
-    array = array.flatten()
-    return array
+    @classmethod
+    def from_image(cls, img):
+        shape, values = cls.convert_image_to_values(img)
+        weights = cls.generate_weights_from_values(values)
+        return cls(shape[0] * shape[1], weights, values)
+        
 
+    @staticmethod
+    def convert_image_to_values(img):
+        image = Image.open(img)
+        image_array = np.array([[-1 if pixel == 0 else 1 for pixel in row] for row in asarray(image)])
+        return (image_array.shape, image_array.flatten())
 
-
-    
+    @staticmethod
+    def generate_weights_from_values(values):
+        weights = np.zeros(shape=(len(values), len(values)))
+        for i in range(len(values)):
+            for j in range(len(values)):
+                weights[i][j] = (values[i] != values[j]) * values[i] * values[j]
+        return weights
