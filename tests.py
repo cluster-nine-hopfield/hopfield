@@ -11,8 +11,9 @@ from hopfield import *
 test = Hopfield.from_image("network.png")
 test.display()
 test.perturb(10)
+test.display()
 test.do_synchronous_update()
 test.display()
-test.display()
+#test.display()
 
 
