@@ -91,7 +91,6 @@ class Hopfield:
         shape, values = cls.convert_image_to_values(img)
         weights = cls.generate_weights_from_values(values)
         return cls(shape[0] * shape[1], weights, values)
-        
 
     @staticmethod
     def convert_image_to_values(img):
