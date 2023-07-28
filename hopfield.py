@@ -78,8 +78,10 @@ class Hopfield:
             img.show()
             return True
         
-    #def train_on_values(self):
-        #for i in range()
+    def train_on_values(self):
+        for i in range(n):
+            for j in range(n):
+                self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
 
             
 def image_nodes(img):
