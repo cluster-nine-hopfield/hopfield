@@ -82,11 +82,6 @@ class Hopfield:
             for j in range(n):
                 self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
 
-    def hamming_distance(self, other):
-        # Hamming distance is the number of bits that differ between two bit strings
-        # other is another hopfield network
-        return sum(self.values != other.values)
-
     def flip_values(self):
         for(i, value) in enumerate(self.values):
             self.values[i] = -value
@@ -112,3 +107,7 @@ class Hopfield:
             for j in range(len(values)):
                 weights[i][j] = (values[i] != values[j]) * values[i] * values[j]
         return weights
+
+    @staticmethod
+    def hamming_distance(values1, values2):
+        return sum(values1 != values2)
