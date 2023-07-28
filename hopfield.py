@@ -1,5 +1,6 @@
 import numpy as np
-
+from math import sqrt
+from PIL import Image
 
 # Hopfield network
 class Hopfield:
@@ -57,3 +58,21 @@ class Hopfield:
         new = Hopfield(self.n, self.weights, self.values)
         new.do_synchronous_update()
         return np.array_equal(self.values,new.values)
+    
+    def display(self):
+        vals = self.values.size
+        if not sqrt(vals).is_integer():
+            print("can't be transformed")
+            return False
+
+        else:
+            square = np.reshape(self.values, (int(sqrt(vals)),int(sqrt(vals))))
+
+
+            square = ((square * -1 + 1)/2 * 255).astype(np.uint8)
+            print(square)
+            img = Image.fromarray(square)
+            img.show()
+            return True
+
+            
