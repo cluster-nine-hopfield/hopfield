@@ -13,3 +13,6 @@ test.display()
 test.perturb(10)
 test.do_synchronous_update()
 test.display()
+test.display()
+
+
