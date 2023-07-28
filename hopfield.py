@@ -83,6 +83,10 @@ class Hopfield:
             for j in range(n):
                 self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
 
+    def hamming_distance(self, other):
+        # Hamming distance is the number of bits that differ between two bit strings
+        return sum(self.values != other.values)
+
             
 def image_nodes(img):
     image = Image.open(img)
