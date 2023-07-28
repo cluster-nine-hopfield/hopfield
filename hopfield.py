@@ -97,7 +97,13 @@ class Hopfield:
     @staticmethod
     def convert_image_to_values(img):
         image = Image.open(img)
-        image_array = np.array([[-1 if pixel == 0 else 1 for pixel in row] for row in asarray(image)])
+        image_as_array = asarray(image)
+        image_array = None
+        if type(image_as_array[0][0]) == np.uint8:
+            image_array = np.array([[-1 if pixel == 0 else 1 for pixel in row] for row in asarray(image_as_array)])
+        elif type(image_as_array[0][0]) == np.ndarray:
+            image_array = np.array([[-1 if pixel[0] == 0 else 1 for pixel in row] for row in asarray(image_as_array)])
+
         return (image_array.shape, image_array.flatten())
 
     @staticmethod
