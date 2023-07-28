@@ -14,5 +14,11 @@ test.perturb(10)
 test.do_synchronous_update()
 test.display()
 test.display()
+print(test.values)
+print(test.values.shape)
+print(test.values.size)
+print(test.weights.shape)
+print(test.weights.size)
+print(test.is_steady())
 
 

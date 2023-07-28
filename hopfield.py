@@ -60,7 +60,7 @@ class Hopfield:
         return np.array(outputs)
 
     def is_steady(self):
-        new = Hopfield(self.n, self.weights, self.values)
+        new = Hopfield(self.weights, self.values, self.shape)
         new.do_synchronous_update()
         return np.array_equal(self.values, new.values)    
 
