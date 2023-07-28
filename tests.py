@@ -8,7 +8,7 @@ from hopfield import *
 
 
 # test initialization from image
-test = Hopfield.from_image("network.png")
+test = Hopfield.from_image("pixil-frame-0.png")
 test.display()
 test.perturb(10)
 test.do_synchronous_update()
