@@ -71,17 +71,17 @@ class Hopfield:
             return False
 
         else:
-            square = np.reshape(self.values, (int(sqrt(vals)),int(sqrt(vals))))
-
-            square = ((square * -1 + 1)/2 * 255).astype(np.uint8)
-            print(square)
-            img = Image.fromarray(square)
+            #make rectangle
+            rectangle = np.reshape(self.values, self.shape)
+            rectangle = ((rectangle * -1 + 1)/2 * 255).astype(np.uint8)
+            print(rectangle)
+            img = Image.fromarray(rectangle)
             img.show()
             return True
         
     def train_on_values(self):
-        for i in range(n):
-            for j in range(n):
+        for i in range(self.n):
+            for j in range(self.n):
                 self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
 
     def perturb(self, num):
