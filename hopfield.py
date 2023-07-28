@@ -84,7 +84,12 @@ class Hopfield:
 
     def hamming_distance(self, other):
         # Hamming distance is the number of bits that differ between two bit strings
+        # other is another hopfield network
         return sum(self.values != other.values)
+
+    def flip_values(self):
+        for(i, value) in enumerate(self.values):
+            self.values[i] = -value
 
 
     @classmethod
