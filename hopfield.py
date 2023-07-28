@@ -1,6 +1,7 @@
 import numpy as np
 from math import sqrt
 from PIL import Image
+from numpy import asarray
 
 # Hopfield network
 class Hopfield:
@@ -76,6 +77,20 @@ class Hopfield:
             img = Image.fromarray(square)
             img.show()
             return True
+        
+    #def train_on_values(self):
+        #for i in range()
 
             
- 
+def image_nodes(img):
+    image = Image.open(img)
+    image = image.resize((28,28))
+
+    array = asarray(image)
+    array = (array > 127) * -1 + 1
+    array = array.flatten()
+    return array
+
+
+
+    
