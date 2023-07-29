@@ -92,7 +92,7 @@ class Hopfield:
         i = 0
         while os.path.exists("network" + str(i) + ".gif"):
             i += 1
-        imageio.mimwrite("network" + str(i) + ".gif", images)
+        imageio.mimwrite("network" + str(i) + ".gif", images, duration=2000)
         if delete_images_afterwards:
             for image in self.images_created_from_this_class:
                 os.remove(image)
