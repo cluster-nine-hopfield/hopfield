@@ -2,6 +2,8 @@ import numpy as np
 from math import sqrt
 from PIL import Image
 from numpy import asarray
+import os.path
+
 
 # Hopfield network
 class Hopfield:
@@ -64,20 +66,24 @@ class Hopfield:
         new.do_synchronous_update()
         return np.array_equal(self.values, new.values)    
 
-    def display(self):
+    def convert_values_to_image(self):
         vals = self.values.size
-        if not sqrt(vals).is_integer():
-            print("can't be transformed")
-            return False
+        rectangle = np.reshape(self.values, self.shape)
+        rectangle = ((rectangle * -1 + 1)/2 * 255).astype(np.uint8)
+        print(rectangle)
+        img = Image.fromarray(rectangle)
+        return img
 
-        else:
-            #make rectangle
-            rectangle = np.reshape(self.values, self.shape)
-            rectangle = ((rectangle * -1 + 1)/2 * 255).astype(np.uint8)
-            print(rectangle)
-            img = Image.fromarray(rectangle)
-            img.show()
-            return True
+    def display(self):
+        img = self.convert_values_to_image()
+        img.show()
+
+    def save_as_image(self):
+        img = self.convert_values_to_image()
+        i = 0
+        while os.path.exists("network" + str(i) + ".png"):
+            i += 1
+        img.save("network" + str(i) + ".png")
         
     def train_on_values(self):
         for i in range(self.n):
@@ -100,9 +106,9 @@ class Hopfield:
         image_as_array = asarray(image)
         image_array = None
         if type(image_as_array[0][0]) == np.uint8:
-            image_array = np.array([[-1 if pixel == 0 else 1 for pixel in row] for row in asarray(image_as_array)])
+            image_array = np.array([[1 if pixel == 0 else -1 for pixel in row] for row in asarray(image_as_array)])
         elif type(image_as_array[0][0]) == np.ndarray:
-            image_array = np.array([[-1 if pixel[0] == 0 else 1 for pixel in row] for row in asarray(image_as_array)])
+            image_array = np.array([[1 if pixel[0] == 0 else -1 for pixel in row] for row in asarray(image_as_array)])
 
         return (image_array.shape, image_array.flatten())
 
