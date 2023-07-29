@@ -1,7 +1,9 @@
+import os
+import imageio
 import numpy as np
-from math import sqrt
 from PIL import Image
 from numpy import asarray
+
 
 # Hopfield network
 class Hopfield:
@@ -25,6 +27,7 @@ class Hopfield:
             self.values = np.array(values)  # making sure it's the np object
         self.n = n
         self.shape = shape
+        self.images_created_from_this_class = []
 
     def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
@@ -64,21 +67,36 @@ class Hopfield:
         new.do_synchronous_update()
         return np.array_equal(self.values, new.values)    
 
-    def display(self):
+    def convert_values_to_image(self):
         vals = self.values.size
-        if not sqrt(vals).is_integer():
-            print("can't be transformed")
-            return False
+        rectangle = np.reshape(self.values, self.shape)
+        rectangle = ((rectangle * -1 + 1)/2 * 255).astype(np.uint8)
+        print(rectangle)
+        img = Image.fromarray(rectangle)
+        return img
 
-        else:
-            #make rectangle
-            rectangle = np.reshape(self.values, self.shape)
-            rectangle = ((rectangle * -1 + 1)/2 * 255).astype(np.uint8)
-            print(rectangle)
-            img = Image.fromarray(rectangle)
-            img.show()
-            return True
+    def display(self):
+        img = self.convert_values_to_image()
+        img.show()
+
+    def save_as_image(self):
+        img = self.convert_values_to_image()
+        i = 0
+        while os.path.exists("network" + str(i) + ".png"):
+            i += 1
+        img.save("network" + str(i) + ".png")
+        self.images_created_from_this_class.append("network" + str(i) + ".png")
         
+    def animate(self, delete_images_afterwards=False):
+        images = [imageio.imread(f) for f in self.images_created_from_this_class]
+        i = 0
+        while os.path.exists("network" + str(i) + ".gif"):
+            i += 1
+        imageio.mimwrite("network" + str(i) + ".gif", images, duration=2000)
+        if delete_images_afterwards:
+            for image in self.images_created_from_this_class:
+                os.remove(image)
+
     def train_on_values(self):
         for i in range(self.n):
             for j in range(self.n):
@@ -100,9 +118,9 @@ class Hopfield:
         image_as_array = asarray(image)
         image_array = None
         if type(image_as_array[0][0]) == np.uint8:
-            image_array = np.array([[-1 if pixel == 0 else 1 for pixel in row] for row in asarray(image_as_array)])
+            image_array = np.array([[1 if pixel == 0 else -1 for pixel in row] for row in asarray(image_as_array)])
         elif type(image_as_array[0][0]) == np.ndarray:
-            image_array = np.array([[-1 if pixel[0] == 0 else 1 for pixel in row] for row in asarray(image_as_array)])
+            image_array = np.array([[1 if pixel[0] == 0 else -1 for pixel in row] for row in asarray(image_as_array)])
 
         return (image_array.shape, image_array.flatten())
 

@@ -9,11 +9,12 @@ from hopfield import *
 
 # test initialization from image
 test = Hopfield.from_image("pixil-frame-0.png")
-test.display()
+test.save_as_image()
 test.perturb(10)
-test.display()
+test.save_as_image()
 test.do_synchronous_update()
-test.display()
+test.save_as_image()
+test.animate()
 # print(test.values)
 # print(test.values.shape)
 # print(test.values.size)
