@@ -1,8 +1,8 @@
+import os
+import imageio
 import numpy as np
-from math import sqrt
 from PIL import Image
 from numpy import asarray
-import os.path
 
 
 # Hopfield network
@@ -27,6 +27,7 @@ class Hopfield:
             self.values = np.array(values)  # making sure it's the np object
         self.n = n
         self.shape = shape
+        self.images_created_from_this_class = []
 
     def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
@@ -84,7 +85,18 @@ class Hopfield:
         while os.path.exists("network" + str(i) + ".png"):
             i += 1
         img.save("network" + str(i) + ".png")
+        self.images_created_from_this_class.append("network" + str(i) + ".png")
         
+    def animate(self, delete_images_afterwards=False):
+        images = [imageio.imread(f) for f in self.images_created_from_this_class]
+        i = 0
+        while os.path.exists("network" + str(i) + ".gif"):
+            i += 1
+        imageio.mimwrite("network" + str(i) + ".gif", images)
+        if delete_images_afterwards:
+            for image in self.images_created_from_this_class:
+                os.remove(image)
+
     def train_on_values(self):
         for i in range(self.n):
             for j in range(self.n):
