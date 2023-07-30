@@ -8,10 +8,11 @@ from hopfield import *
 
 
 # test initialization from image
-test = Hopfield.from_image("pixil-frame-0.png")
+test = Hopfield.from_image("H.png")
+test.train_on_image("E.png")
 # test.save_as_image()
 # test.perturb(100)
-test.flip_values()
+test.perturb(10, False)
 test.save_as_image()
 test.do_synchronous_update()
 test.save_as_image()

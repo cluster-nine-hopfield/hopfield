@@ -140,7 +140,6 @@ class Hopfield:
                     for row in asarray(image_as_array)
                 ]
             )
-
         return (image_array.shape, image_array.flatten())
 
     @staticmethod
@@ -154,3 +153,8 @@ class Hopfield:
     @staticmethod
     def hamming_distance(values1, values2):
         return sum(values1 != values2)
+
+    def train_on_image(self, img):
+        values = self.convert_image_to_values(img)[1]
+        weights = self.generate_weights_from_values(values)
+        self.weights += weights
