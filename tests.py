@@ -9,17 +9,16 @@ from hopfield import *
 
 # test initialization from image
 test = Hopfield.from_image("pixil-frame-0.png")
-test.save_as_image()
-test.perturb(10)
+# test.save_as_image()
+# test.perturb(100)
+test.flip_values()
 test.save_as_image()
 test.do_synchronous_update()
 test.save_as_image()
-test.animate()
+test.animate(True)
 # print(test.values)
 # print(test.values.shape)
 # print(test.values.size)
 # print(test.weights.shape)
 # print(test.weights.size)
 # print(test.is_steady())
-
-
