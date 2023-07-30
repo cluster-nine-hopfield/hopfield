@@ -102,9 +102,10 @@ class Hopfield:
             for j in range(self.n):
                 self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
 
-    def perturb(self, num):
-        for i in range(num):
-            self.values[np.random.randint(0, self.n)] *= -1
+    def perturb(self, num, replace=True):
+        indexes_to_flip = np.random.choice(list(range(self.n)), size=num, replace=replace)
+        for i in indexes_to_flip:
+            self.values[i] *= -1
     
     def flip_values(self):
         for (i, value) in enumerate(self.values):
