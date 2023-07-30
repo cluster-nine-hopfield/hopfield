@@ -105,6 +105,10 @@ class Hopfield:
     def perturb(self, num):
         for i in range(num):
             self.values[np.random.randint(0, self.n)] *= -1
+    
+    def flip_values(self):
+        for (i, value) in enumerate(self.values):
+            self.values[i] = -value
 
     @classmethod
     def from_image(cls, img):
