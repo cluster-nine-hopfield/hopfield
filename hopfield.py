@@ -65,12 +65,12 @@ class Hopfield:
     def is_steady(self):
         new = Hopfield(self.weights, self.values, self.shape)
         new.do_synchronous_update()
-        return np.array_equal(self.values, new.values)    
+        return np.array_equal(self.values, new.values)
 
     def convert_values_to_image(self):
         vals = self.values.size
         rectangle = np.reshape(self.values, self.shape)
-        rectangle = ((rectangle * -1 + 1)/2 * 255).astype(np.uint8)
+        rectangle = ((rectangle * -1 + 1) / 2 * 255).astype(np.uint8)
         print(rectangle)
         img = Image.fromarray(rectangle)
         return img
@@ -86,7 +86,7 @@ class Hopfield:
             i += 1
         img.save("network" + str(i) + ".png")
         self.images_created_from_this_class.append("network" + str(i) + ".png")
-        
+
     def animate(self, delete_images_afterwards=False):
         images = [imageio.imread(f) for f in self.images_created_from_this_class]
         i = 0
@@ -100,15 +100,19 @@ class Hopfield:
     def train_on_values(self):
         for i in range(self.n):
             for j in range(self.n):
-                self.weights[j][i] = self.weights[i][j] = (i!=j) * self.values[i] * self.values[j]
+                self.weights[j][i] = self.weights[i][j] = (
+                    (i != j) * self.values[i] * self.values[j]
+                )
 
     def perturb(self, num, replace=True):
-        indexes_to_flip = np.random.choice(list(range(self.n)), size=num, replace=replace)
+        indexes_to_flip = np.random.choice(
+            list(range(self.n)), size=num, replace=replace
+        )
         for i in indexes_to_flip:
             self.values[i] *= -1
-    
+
     def flip_values(self):
-        for (i, value) in enumerate(self.values):
+        for i, value in enumerate(self.values):
             self.values[i] = -value
 
     @classmethod
@@ -123,9 +127,19 @@ class Hopfield:
         image_as_array = asarray(image)
         image_array = None
         if type(image_as_array[0][0]) == np.uint8:
-            image_array = np.array([[1 if pixel == 0 else -1 for pixel in row] for row in asarray(image_as_array)])
+            image_array = np.array(
+                [
+                    [1 if pixel == 0 else -1 for pixel in row]
+                    for row in asarray(image_as_array)
+                ]
+            )
         elif type(image_as_array[0][0]) == np.ndarray:
-            image_array = np.array([[1 if pixel[0] == 0 else -1 for pixel in row] for row in asarray(image_as_array)])
+            image_array = np.array(
+                [
+                    [1 if pixel[0] == 0 else -1 for pixel in row]
+                    for row in asarray(image_as_array)
+                ]
+            )
 
         return (image_array.shape, image_array.flatten())
 
