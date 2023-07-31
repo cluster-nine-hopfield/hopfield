@@ -166,3 +166,10 @@ class Hopfield:
         values = self.convert_image_to_values(img)[1]
         weights = self.generate_weights_from_values(values)
         self.weights += weights
+
+    def update_until_steady(self):
+        count=0
+        while not self.is_steady():
+            self.do_synchronous_update()
+            count += 1
+        return count
