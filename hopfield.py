@@ -156,7 +156,7 @@ class Hopfield:
         for i in range(len(values)):
             for j in range(len(values)):
                 weights[i][j] = (values[i] != values[j]) * values[i] * values[j]
-        return weights
+        return weights.astype(np.int64)
 
     @staticmethod
     def hamming_distance(values1, values2):
@@ -176,4 +176,4 @@ class Hopfield:
     
     def train_on_new(self, values):
         weights = self.generate_weights_from_values(values)
-        self.weights += weights
+        self.weights += weights.astype(np.int64)
