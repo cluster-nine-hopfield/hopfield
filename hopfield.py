@@ -158,3 +158,7 @@ class Hopfield:
         values = self.convert_image_to_values(img)[1]
         weights = self.generate_weights_from_values(values)
         self.weights += weights
+
+    def train_on_new(self, values):
+        weights = self.generate_weights_from_values(values)
+        self.weights += weights
