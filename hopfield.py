@@ -10,7 +10,7 @@ class Hopfield:
     # n = number of nodes in the network
     # weights = n x n matrix of weights
     # values = n x 1 vector of values
-    def __init__(self, shape=(5, 5), weights=None, values=None, stored = 1) -> None:
+    def __init__(self, shape=(5, 5), weights=None, values=None, folder_to_save_to = None) -> None:
         n = shape[0] * shape[1]
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n, n))
@@ -28,6 +28,14 @@ class Hopfield:
         self.n = n
         self.shape = shape
         self.images_created_from_this_class = []
+        if folder_to_save_to is None:
+            i = 0
+            while os.path.isdir("network" + str(i)):
+                i += 1
+            os.mkdir("network" + str(i))
+            self.folder_to_save_to = "network" + str(i)
+        else:
+            self.folder_to_save_to = folder_to_save_to
 
     def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
@@ -82,17 +90,17 @@ class Hopfield:
     def save_as_image(self):
         img = self.convert_values_to_image()
         i = 0
-        while os.path.exists("network" + str(i) + ".png"):
+        while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".png"):
             i += 1
-        img.save("network" + str(i) + ".png")
-        self.images_created_from_this_class.append("network" + str(i) + ".png")
+        img.save(self.folder_to_save_to + "/network" + str(i) + ".png")
+        self.images_created_from_this_class.append(self.folder_to_save_to + "/network" + str(i) + ".png")
 
     def animate(self, delete_images_afterwards=False):
         images = [imageio.imread(f) for f in self.images_created_from_this_class]
         i = 0
-        while os.path.exists("network" + str(i) + ".gif"):
+        while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".gif"):
             i += 1
-        imageio.mimwrite("network" + str(i) + ".gif", images, duration=1000 / len(images))
+        imageio.mimwrite(self.folder_to_save_to + "/network" + str(i) + ".gif", images, duration=1000 / len(images))
         if delete_images_afterwards:
             for image in self.images_created_from_this_class:
                 os.remove(image)
