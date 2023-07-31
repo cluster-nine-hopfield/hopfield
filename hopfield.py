@@ -176,7 +176,7 @@ class Hopfield:
         weights = self.generate_weights_from_values(values)
         self.weights += weights
 
-    def update_until_steady(self):
+    def sync_update_until_steady(self):
         count = 0
         while not self.is_steady():
             self.do_synchronous_update()
@@ -186,3 +186,16 @@ class Hopfield:
     def train_on_new(self, values):
         weights = self.generate_weights_from_values(values)
         self.weights += weights
+
+    def async_update_until_steady(self):
+        count = 0
+        while not self.is_steady():
+            self.do_asynchronous_update()
+            count += 1
+        return count
+
+    def sync_vs_async(self):
+        sync_value = self.sync_update_until_steady()
+        self.reset_values()
+        async_value = self.async_update_until_steady()
+        return (sync_value, async_value)
