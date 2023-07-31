@@ -10,7 +10,7 @@ class Hopfield:
     # n = number of nodes in the network
     # weights = n x n matrix of weights
     # values = n x 1 vector of values
-    def __init__(self, shape=(5, 5), weights=None, values=None) -> None:
+    def __init__(self, shape=(5, 5), weights=None, values=None, stored = 1) -> None:
         n = shape[0] * shape[1]
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n, n))

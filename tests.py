@@ -8,7 +8,7 @@ from hopfield import *
 
 
 # test initialization from image
-test = Hopfield.from_image("pixil-frame-0.png")
+test = Hopfield.from_image("network.png")
 test.save_as_image()
 test.perturb(10)
 test.save_as_image()
