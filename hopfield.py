@@ -13,6 +13,7 @@ class Hopfield:
     def __init__(
         self, shape=(5, 5), weights=None, values=None, folder_to_save_to=None
     ) -> None:
+        self.perturbed_nodes = None
         n = shape[0] * shape[1]
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n, n))
@@ -198,7 +199,18 @@ class Hopfield:
         return count
 
     def sync_vs_async(self):
+        self.perturb(1)
+        self.save_perturbed()
         sync_value = self.sync_update_until_steady()
-        self.reset_values()
+        self.values=self.perturbed_nodes
         async_value = self.async_update_until_steady()
-        return (sync_value, async_value)
+        return sync_value, async_value
+
+    def save_perturbed(self):
+        # save the perturbed nodes in a list
+        self.perturbed_nodes = np.array(self.values)
+        return self.perturbed_nodes
+
+
+
+
