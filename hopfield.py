@@ -173,3 +173,7 @@ class Hopfield:
             self.do_synchronous_update()
             count += 1
         return count
+    
+    def train_on_new(self, values):
+        weights = self.generate_weights_from_values(values)
+        self.weights += weights
