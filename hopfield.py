@@ -41,7 +41,8 @@ class Hopfield:
 
     def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
-        self.values = self.convert_node_inputs_to_outputs(list(node_inputs))
+        # print("node_inputs: " + str(node_inputs))
+        self.values = self.convert_node_inputs_to_outputs(node_inputs)
         return self.values
 
     def do_random_update(self):
@@ -73,7 +74,7 @@ class Hopfield:
         return np.array(outputs)
 
     def is_steady(self):
-        new = Hopfield(self.weights, self.values, self.shape)
+        new = Hopfield(self.shape, self.weights, self.values)
         new.do_synchronous_update()
         return np.array_equal(self.values, new.values)
 
