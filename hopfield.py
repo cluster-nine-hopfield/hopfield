@@ -38,7 +38,7 @@ class Hopfield:
         index_of_node_to_update = np.random.randint(0, self.n)
         node_input = self.values @ self.weights[index_of_node_to_update]
         self.values[index_of_node_to_update] = self.convert_node_inputs_to_outputs(
-            node_input
+            [node_input]
         )[0]
         return self.values[index_of_node_to_update]
 
@@ -92,7 +92,7 @@ class Hopfield:
         i = 0
         while os.path.exists("network" + str(i) + ".gif"):
             i += 1
-        imageio.mimwrite("network" + str(i) + ".gif", images, duration=2000)
+        imageio.mimwrite("network" + str(i) + ".gif", images, duration=1000 / len(images))
         if delete_images_afterwards:
             for image in self.images_created_from_this_class:
                 os.remove(image)
