@@ -10,7 +10,9 @@ class Hopfield:
     # n = number of nodes in the network
     # weights = n x n matrix of weights
     # values = n x 1 vector of values
-    def __init__(self, shape=(5, 5), weights=None, values=None, folder_to_save_to = None) -> None:
+    def __init__(
+        self, shape=(5, 5), weights=None, values=None, folder_to_save_to=None
+    ) -> None:
         n = shape[0] * shape[1]
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n, n))
@@ -93,14 +95,20 @@ class Hopfield:
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".png"):
             i += 1
         img.save(self.folder_to_save_to + "/network" + str(i) + ".png")
-        self.images_created_from_this_class.append(self.folder_to_save_to + "/network" + str(i) + ".png")
+        self.images_created_from_this_class.append(
+            self.folder_to_save_to + "/network" + str(i) + ".png"
+        )
 
     def animate(self, delete_images_afterwards=False):
         images = [imageio.imread(f) for f in self.images_created_from_this_class]
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".gif"):
             i += 1
-        imageio.mimwrite(self.folder_to_save_to + "/network" + str(i) + ".gif", images, duration=1000 / len(images))
+        imageio.mimwrite(
+            self.folder_to_save_to + "/network" + str(i) + ".gif",
+            images,
+            duration=1000 / len(images),
+        )
         if delete_images_afterwards:
             for image in self.images_created_from_this_class:
                 os.remove(image)
@@ -168,12 +176,12 @@ class Hopfield:
         self.weights += weights
 
     def update_until_steady(self):
-        count=0
+        count = 0
         while not self.is_steady():
             self.do_synchronous_update()
             count += 1
         return count
-    
+
     def train_on_new(self, values):
         weights = self.generate_weights_from_values(values)
         self.weights += weights
