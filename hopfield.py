@@ -34,7 +34,6 @@ class Hopfield:
             i = 0
             while os.path.isdir("network" + str(i)):
                 i += 1
-            os.mkdir("network" + str(i))
             self.folder_to_save_to = "network" + str(i)
         else:
             self.folder_to_save_to = folder_to_save_to
@@ -91,6 +90,8 @@ class Hopfield:
         img.show()
 
     def save_as_image(self):
+        if not os.path.isdir(self.folder_to_save_to):
+            os.mkdir("network" + str(i))
         img = self.convert_values_to_image()
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".png"):
@@ -101,6 +102,8 @@ class Hopfield:
         )
 
     def animate(self, delete_images_afterwards=False):
+        if not os.path.isdir(self.folder_to_save_to):
+            os.mkdir("network" + str(i))
         images = [imageio.imread(f) for f in self.images_created_from_this_class]
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".gif"):
