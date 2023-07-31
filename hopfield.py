@@ -39,7 +39,7 @@ class Hopfield:
 
     def do_synchronous_update(self):
         node_inputs = self.weights @ self.values
-        self.values = self.convert_node_inputs_to_outputs(node_inputs)
+        self.values = self.convert_node_inputs_to_outputs(list(node_inputs))
         return self.values
 
     def do_random_update(self):
