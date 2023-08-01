@@ -213,5 +213,5 @@ class Hopfield:
         # restore the perturbed nodes from the list
         self.values = self.perturbed_nodes
 
-
-
+    def generate_random_image(self):
+        return np.random.choice([-1, 1], size=self.n)
