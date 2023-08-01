@@ -14,6 +14,7 @@ class Hopfield:
     def __init__(
         self, shape=(5, 5), weights=None, values=None, folder_to_save_to=None
     ) -> None:
+        self.perturbed_nodes = None
         n = shape[0] * shape[1]
         if weights is None:
             self.weights = np.random.choice([-1, 1], size=(n, n))
@@ -35,7 +36,6 @@ class Hopfield:
             i = 0
             while os.path.isdir("network" + str(i)):
                 i += 1
-            os.mkdir("network" + str(i))
             self.folder_to_save_to = "network" + str(i)
         else:
             self.folder_to_save_to = folder_to_save_to
@@ -92,6 +92,8 @@ class Hopfield:
         img.show()
 
     def save_as_image(self):
+        if not os.path.isdir(self.folder_to_save_to):
+            os.mkdir("network" + str(i))
         img = self.convert_values_to_image()
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".png"):
@@ -102,6 +104,8 @@ class Hopfield:
         )
 
     def animate(self, delete_images_afterwards=False):
+        if not os.path.isdir(self.folder_to_save_to):
+            os.mkdir("network" + str(i))
         images = [imageio.imread(f) for f in self.images_created_from_this_class]
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".gif"):
@@ -177,7 +181,7 @@ class Hopfield:
         weights = self.generate_weights_from_values(values)
         self.weights += weights
 
-    def update_until_steady(self):
+    def sync_update_until_steady(self):
         count = 0
         for count in range(20):
             self.do_synchronous_update()
@@ -195,3 +199,27 @@ class Hopfield:
         #print("OLD_WEIGHTS")
         #print(self.weights)
         self.weights += weights
+
+    def async_update_until_steady(self):
+        count = 0
+        while not self.is_steady():
+            self.do_asynchronous_update()
+            count += 1
+        return count
+
+    def sync_vs_async(self):
+        self.perturb(1)
+        self.save_perturbed()
+        sync_value = self.sync_update_until_steady()
+        self.values=self.perturbed_nodes
+        async_value = self.async_update_until_steady()
+        return sync_value, async_value
+
+    def save_perturbed(self):
+        # save the perturbed nodes in a list
+        self.perturbed_nodes = np.array(self.values)
+        return self.perturbed_nodes
+
+
+
+
