@@ -58,7 +58,7 @@ class Hopfield:
 
     def update_node(self, node_index):
         node_input = self.values @ self.weights[node_index]
-        self.values[node_index] = self.convert_node_inputs_to_outputs(node_input)[0]
+        self.values[node_index] = self.convert_node_inputs_to_outputs(node_input)
         return self.values[node_index]
 
     def update_nodes(self, list_of_node_indexes):
@@ -72,6 +72,8 @@ class Hopfield:
         return node_outputs
 
     def convert_node_inputs_to_outputs(self, node_inputs):
+        if isinstance(node_inputs, np.float64):
+            return {True: 1, False: -1}[node_inputs >= 0]
         outputs = []
         for node_input in node_inputs:
             outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
