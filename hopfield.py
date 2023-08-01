@@ -125,11 +125,7 @@ class Hopfield:
                 os.remove(image)
 
     def train_on_values(self):
-        for i in range(self.n):
-            for j in range(self.n):
-                self.weights[j][i] = self.weights[i][j] = (
-                    (i != j) * self.values[i] * self.values[j]
-                )
+        self.weights = self.generate_weights_from_values(self.values)
 
     def perturb(self, num, replace=True):
         indexes_to_flip = np.random.choice(
