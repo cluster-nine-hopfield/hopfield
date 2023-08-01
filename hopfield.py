@@ -59,6 +59,7 @@ class Hopfield:
         return self.values[node_index]
 
     def update_nodes(self, list_of_node_indexes):
+        # updates all these nodes at the same time
         node_inputs = self.values @ [
             self.weights[node_index] for node_index in list_of_node_indexes
         ]
