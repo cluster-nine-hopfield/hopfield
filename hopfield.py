@@ -45,6 +45,9 @@ class Hopfield:
         self.values = self.convert_node_inputs_to_outputs(node_inputs)
         return self.values
 
+    def do_asynchronous_update(self):
+        for node in range(self.n):
+            self.update_node(node)
     def do_random_update(self):
         index_of_node_to_update = np.random.randint(0, self.n)
         node_input = self.values @ self.weights[index_of_node_to_update]
@@ -199,19 +202,14 @@ class Hopfield:
             count += 1
         return count
 
-    def sync_vs_async(self):
-        self.perturb(1)
-        self.save_perturbed()
-        sync_value = self.sync_update_until_steady()
-        self.values=self.perturbed_nodes
-        async_value = self.async_update_until_steady()
-        return sync_value, async_value
-
     def save_perturbed(self):
         # save the perturbed nodes in a list
         self.perturbed_nodes = np.array(self.values)
         return self.perturbed_nodes
 
+    def restore_perturbed(self):
+        # restore the perturbed nodes from the list
+        self.values = self.perturbed_nodes
 
 
 
