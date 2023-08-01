@@ -3,6 +3,7 @@ import imageio
 import numpy as np
 from PIL import Image
 from numpy import asarray
+from tqdm import tqdm
 
 
 # Hopfield network
@@ -178,11 +179,19 @@ class Hopfield:
 
     def update_until_steady(self):
         count = 0
-        while not self.is_steady():
+        for count in range(20):
             self.do_synchronous_update()
+            #print(self.values)
             count += 1
+            if self.is_steady():
+                break
+        
         return count
 
     def train_on_new(self, values):
         weights = self.generate_weights_from_values(values)
+        #print("WEIGHTS")
+        #print(weights)
+        #print("OLD_WEIGHTS")
+        #print(self.weights)
         self.weights += weights
