@@ -85,7 +85,6 @@ class Hopfield:
         return np.array_equal(self.values, new.values)
 
     def convert_values_to_image(self):
-        vals = self.values.size
         rectangle = np.reshape(self.values, self.shape)
         rectangle = ((rectangle * -1 + 1) / 2 * 255).astype(np.uint8)
         print(rectangle)
@@ -98,7 +97,7 @@ class Hopfield:
 
     def save_as_image(self):
         if not os.path.isdir(self.folder_to_save_to):
-            os.mkdir("network" + str(i))
+            os.mkdir(self.folder_to_save_to)
         img = self.convert_values_to_image()
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".png"):
@@ -149,14 +148,14 @@ class Hopfield:
         image = Image.open(img)
         image_as_array = asarray(image)
         image_array = None
-        if type(image_as_array[0][0]) == np.uint8:
+        if isinstance(image_as_array[0][0], np.uint8):
             image_array = np.array(
                 [
                     [1 if pixel == 0 else -1 for pixel in row]
                     for row in asarray(image_as_array)
                 ]
             )
-        elif type(image_as_array[0][0]) == np.ndarray:
+        elif isinstance(image_as_array[0][0], np.ndarray):
             image_array = np.array(
                 [
                     [1 if pixel[0] == 0 else -1 for pixel in row]
