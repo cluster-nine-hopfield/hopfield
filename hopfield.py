@@ -125,8 +125,11 @@ class Hopfield:
                 self.weights[j][i] = self.weights[i][j] = (
                     (i != j) * self.values[i] * self.values[j]
                 )
+    
+    #def storkey_train(self, array):
+        
 
-    def perturb(self, num, replace=True):
+    def perturb(self, num, replace=False):
         indexes_to_flip = np.random.choice(
             list(range(self.n)), size=num, replace=replace
         )
@@ -169,7 +172,7 @@ class Hopfield:
         weights = np.zeros(shape=(len(values), len(values)))
         for i in range(len(values)):
             for j in range(len(values)):
-                weights[i][j] = (values[i] != values[j]) * values[i] * values[j]
+                weights[i][j] = (i != j) * values[i] * values[j]
         return weights.astype(np.int64)
 
     @staticmethod
@@ -181,16 +184,31 @@ class Hopfield:
         weights = self.generate_weights_from_values(values)
         self.weights += weights
 
-    def sync_update_until_steady(self):
+    def sync_update_until_steady(self, infinite = False):
         count = 0
-        for count in range(20):
-            self.do_synchronous_update()
-            #print(self.values)
-            count += 1
-            if self.is_steady():
-                break
+        iterations = []
+        if infinite == False:
+            for count in range(10):
+                self.do_synchronous_update()
+                #print(self.values)
+                count += 1
+                iterations.append(list(self.values))
+                if self.is_steady():
+                    break
+            
+            return [iterations,count]
+
+        else:
+            while(self.is_steady() != True):
+                self.do_synchronous_update()
+                count+=1
+                iterations.append(list(self.values))
+
+            return [iterations, count]
+
         
-        return count
+
+
 
     def train_on_new(self, values):
         weights = self.generate_weights_from_values(values)
