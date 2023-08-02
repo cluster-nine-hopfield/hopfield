@@ -170,7 +170,7 @@ class Hopfield:
         weights = np.zeros(shape=(len(values), len(values)))
         for i in range(len(values)):
             for j in range(len(values)):
-                weights[i][j] = (values[i] != values[j]) * values[i] * values[j]
+                weights[i][j] = (i != j) * values[i] * values[j]
         return weights
 
     @staticmethod
