@@ -51,6 +51,7 @@ class Hopfield:
     def do_asynchronous_update(self):
         for node in range(self.n):
             self.update_node(node)
+
     def do_random_update(self):
         index_of_node_to_update = np.random.randint(0, self.n)
         node_input = self.values @ self.weights[index_of_node_to_update]
@@ -88,7 +89,6 @@ class Hopfield:
         return np.array_equal(self.values, new.values)
 
     def convert_values_to_image(self):
-        vals = self.values.size
         rectangle = np.reshape(self.values, self.shape)
         rectangle = ((rectangle * -1 + 1) / 2 * 255).astype(np.uint8)
         print(rectangle)
@@ -101,7 +101,7 @@ class Hopfield:
 
     def save_as_image(self):
         if not os.path.isdir(self.folder_to_save_to):
-            os.mkdir("network" + str(i))
+            os.mkdir(self.folder_to_save_to)
         img = self.convert_values_to_image()
         i = 0
         while os.path.exists(self.folder_to_save_to + "/network" + str(i) + ".png"):
@@ -121,8 +121,10 @@ class Hopfield:
         imageio.mimwrite(
             self.folder_to_save_to + "/network" + str(i) + ".gif",
             images,
-            duration=1000 / len(images),
+            duration=0.000286000286,
         )
+        print("duration:")
+        print(1000 / len(images))
         if delete_images_afterwards:
             for image in self.images_created_from_this_class:
                 os.remove(image)
@@ -191,7 +193,7 @@ class Hopfield:
             self.values[i] = -value
 
     @classmethod
-    def from_image(cls, img):
+    def from_bw_image(cls, img):
         shape, values = cls.convert_image_to_values(img)
         weights = cls.generate_weights_from_values(values)
         return cls(shape, weights, values)
@@ -201,20 +203,26 @@ class Hopfield:
         image = Image.open(img)
         image_as_array = asarray(image)
         image_array = None
-        if type(image_as_array[0][0]) == np.uint8:
+        if isinstance(image_as_array[0][0], np.uint8):
             image_array = np.array(
                 [
                     [1.0 if pixel == 0 else -1.0 for pixel in row]
                     for row in asarray(image_as_array)
                 ]
             )
-        elif type(image_as_array[0][0]) == np.ndarray:
+        elif isinstance(image_as_array[0][0], np.ndarray):
             image_array = np.array(
                 [
+<<<<<<< HEAD
                     [1.0 if pixel[0] == 0 else -1.0 for pixel in row]
+=======
+                    [1 if (pixel[-1] == 255) else -1 for pixel in row]
+>>>>>>> d28bdaba8afff3deef0b76e6ca1018c3a5d44c11
                     for row in asarray(image_as_array)
                 ]
             )
+        elif isinstance(image_as_array[0][0], np.bool_):
+            image_array = np.array([[1 * (not pixel) for pixel in row] for row in image_as_array])
         return (image_array.shape, image_array.flatten())
 
     @staticmethod
@@ -222,8 +230,13 @@ class Hopfield:
         weights = np.zeros(shape=(len(values), len(values)))
         for i in range(len(values)):
             for j in range(len(values)):
+<<<<<<< HEAD
                 weights[i][j] = (i != j) * values[i] * values[j] * (1.0/size)
         return weights 
+=======
+                weights[i][j] = (i != j) * values[i] * values[j]
+        return weights
+>>>>>>> d28bdaba8afff3deef0b76e6ca1018c3a5d44c11
 
     @staticmethod
     def hamming_distance(values1, values2):
