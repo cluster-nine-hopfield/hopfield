@@ -48,6 +48,7 @@ class Hopfield:
     def do_asynchronous_update(self):
         for node in range(self.n):
             self.update_node(node)
+
     def do_random_update(self):
         index_of_node_to_update = np.random.randint(0, self.n)
         node_input = self.values @ self.weights[index_of_node_to_update]
@@ -117,8 +118,10 @@ class Hopfield:
         imageio.mimwrite(
             self.folder_to_save_to + "/network" + str(i) + ".gif",
             images,
-            duration=1000 / len(images),
+            duration=0.000286000286,
         )
+        print("duration:")
+        print(1000 / len(images))
         if delete_images_afterwards:
             for image in self.images_created_from_this_class:
                 os.remove(image)
@@ -138,7 +141,7 @@ class Hopfield:
             self.values[i] = -value
 
     @classmethod
-    def from_image(cls, img):
+    def from_bw_image(cls, img):
         shape, values = cls.convert_image_to_values(img)
         weights = cls.generate_weights_from_values(values)
         return cls(shape, weights, values)
@@ -158,10 +161,12 @@ class Hopfield:
         elif isinstance(image_as_array[0][0], np.ndarray):
             image_array = np.array(
                 [
-                    [1 if pixel[0] == 0 else -1 for pixel in row]
+                    [1 if (pixel[-1] == 255) else -1 for pixel in row]
                     for row in asarray(image_as_array)
                 ]
             )
+        elif isinstance(image_as_array[0][0], np.bool_):
+            image_array = np.array([[1 * (not pixel) for pixel in row] for row in image_as_array])
         return (image_array.shape, image_array.flatten())
 
     @staticmethod
