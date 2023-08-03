@@ -3,7 +3,6 @@ import imageio
 import numpy as np
 from PIL import Image
 from numpy import asarray
-from tqdm import tqdm
 
 
 # Hopfield network
@@ -164,21 +163,6 @@ class Hopfield:
                 term = (1.0/self.size) * term
 
                 self.weights[i][j] += term 
-        
-
-
-
-        
-
-                
-
-                
-
-
-
-
-
-
      
 
     def perturb(self, num, replace=False):
@@ -193,7 +177,7 @@ class Hopfield:
             self.values[i] = -value
 
     @classmethod
-    def from_bw_image(cls, img):
+    def from_image(cls, img):
         shape, values = cls.convert_image_to_values(img)
         weights = cls.generate_weights_from_values(values)
         return cls(shape, weights, values)
@@ -213,11 +197,7 @@ class Hopfield:
         elif isinstance(image_as_array[0][0], np.ndarray):
             image_array = np.array(
                 [
-<<<<<<< HEAD
-                    [1.0 if pixel[0] == 0 else -1.0 for pixel in row]
-=======
-                    [1 if (pixel[-1] == 255) else -1 for pixel in row]
->>>>>>> d28bdaba8afff3deef0b76e6ca1018c3a5d44c11
+                    [1.0 if (pixel[-1] == 255) else -1.0 for pixel in row]
                     for row in asarray(image_as_array)
                 ]
             )
@@ -230,13 +210,8 @@ class Hopfield:
         weights = np.zeros(shape=(len(values), len(values)))
         for i in range(len(values)):
             for j in range(len(values)):
-<<<<<<< HEAD
                 weights[i][j] = (i != j) * values[i] * values[j] * (1.0/size)
         return weights 
-=======
-                weights[i][j] = (i != j) * values[i] * values[j]
-        return weights
->>>>>>> d28bdaba8afff3deef0b76e6ca1018c3a5d44c11
 
     @staticmethod
     def hamming_distance(values1, values2):
@@ -294,3 +269,6 @@ class Hopfield:
     def generate_random_image(self):
         return np.random.choice([-1.0, 1.0], size=self.n)
     
+
+    def generate_random_image(self):
+        return np.random.choice([-1, 1], size=self.n)
