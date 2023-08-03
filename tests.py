@@ -8,7 +8,7 @@ from hopfield import *
 
 
 # test initialization from image
-test = Hopfield.from_image("H.png")
+test = Hopfield.from_bw_image("H.png")
 test.train_on_image("E.png")
 # test.save_as_image()
 # test.perturb(100)
