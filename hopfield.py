@@ -17,21 +17,23 @@ class Hopfield:
         self.perturbed_nodes = None
         n = shape[0] * shape[1]
         if weights is None:
-            self.weights = np.random.choice([-1, 1], size=(n, n))
+            self.weights = np.zeros((n,n))
             self.weights = (
                 np.tril(self.weights) + np.tril(self.weights, -1).T
             )  # makes the matrix diagonal
             for i in range(n):
-                self.weights[i][i] = 0  # nodes don't input to themselves
+                self.weights[i][i] = 0.0  # nodes don't input to themselves
         else:
             self.weights = np.array(weights)  # making sure it's the np object
         if values is None:
-            self.values = np.random.choice([-1, 1], size=n)
+            self.values = np.random.choice([-1.0, 1.0], size=n)
         else:
             self.values = np.array(values)  # making sure it's the np object
         self.n = n
         self.shape = shape
         self.images_created_from_this_class = []
+        self.size = self.values.size
+
         if folder_to_save_to is None:
             i = 0
             while os.path.isdir("network" + str(i)):
@@ -74,10 +76,10 @@ class Hopfield:
 
     def convert_node_inputs_to_outputs(self, node_inputs):
         if isinstance(node_inputs, np.float64):
-            return {True: 1, False: -1}[node_inputs >= 0]
+            return {True: 1.0, False: -1.0}[node_inputs >= 0]
         outputs = []
         for node_input in node_inputs:
-            outputs.append({True: 1, False: -1}[node_input >= 0])  # activation function
+            outputs.append({True: 1.0, False: -1.0}[node_input >= 0])  # activation function
         return np.array(outputs)
 
     def is_steady(self):
@@ -125,15 +127,61 @@ class Hopfield:
             for image in self.images_created_from_this_class:
                 os.remove(image)
 
-    def train_on_values(self):
-        self.weights = self.generate_weights_from_values(self.values)
+    def train_on_values(self, storkey = False):
+        if storkey == False:
+            self.weights = self.generate_weights_from_values(self.values, self.size)
+        else:
+            self.storkey_train(self.values)
     
-    #def storkey_train(self, array):
+    def storkey_train(self, array):
+
+        K = np.zeros((self.size,self.size))
         
+        for i in range(self.size):
+            for j in range(self.size):
+                
+                W_i = self.weights[i,:]
+                M = np.multiply(W_i, array)
+                #M = np.delete(M,[i,j])
+                M[i] = 0
+                M[j] = 0
+
+                K[i][j] = np.sum(M)
+
+
+        for i in range(self.size):
+            for j in range(self.size):
+
+                h_ij = K[i][j]
+                h_ji = K[j][i]
+
+                e_i = array[i]
+                e_j = array[j]
+
+                term = e_i * e_j - e_i * h_ji - e_j * h_ij
+                term = (1.0/self.size) * term
+
+                self.weights[i][j] += term 
+        
+
+
+
+        
+
+                
+
+                
+
+
+
+
+
+
+     
 
     def perturb(self, num, replace=False):
         indexes_to_flip = np.random.choice(
-            list(range(self.n)), size=num, replace=replace
+            list(np.arange(self.n)), size=num, replace=replace
         )
         for i in indexes_to_flip:
             self.values[i] *= -1
@@ -156,34 +204,36 @@ class Hopfield:
         if type(image_as_array[0][0]) == np.uint8:
             image_array = np.array(
                 [
-                    [1 if pixel == 0 else -1 for pixel in row]
+                    [1.0 if pixel == 0 else -1.0 for pixel in row]
                     for row in asarray(image_as_array)
                 ]
             )
         elif type(image_as_array[0][0]) == np.ndarray:
             image_array = np.array(
                 [
-                    [1 if pixel[0] == 0 else -1 for pixel in row]
+                    [1.0 if pixel[0] == 0 else -1.0 for pixel in row]
                     for row in asarray(image_as_array)
                 ]
             )
         return (image_array.shape, image_array.flatten())
 
     @staticmethod
-    def generate_weights_from_values(values):
+    def generate_weights_from_values(values, size):
         weights = np.zeros(shape=(len(values), len(values)))
         for i in range(len(values)):
             for j in range(len(values)):
-                weights[i][j] = (i != j) * values[i] * values[j]
-        return weights.astype(np.int64)
+                weights[i][j] = (i != j) * values[i] * values[j] * (1.0/size)
+        return weights 
 
     @staticmethod
     def hamming_distance(values1, values2):
         return sum(values1 != values2)
+    
+
 
     def train_on_image(self, img):
         values = self.convert_image_to_values(img)[1]
-        weights = self.generate_weights_from_values(values)
+        weights = self.generate_weights_from_values(values, self.size)
         self.weights += weights
 
     def sync_update_until_steady(self, infinite = False):
@@ -208,16 +258,8 @@ class Hopfield:
 
             return [iterations, count]
 
-        
-
-
-
     def train_on_new(self, values):
-        weights = self.generate_weights_from_values(values)
-        #print("WEIGHTS")
-        #print(weights)
-        #print("OLD_WEIGHTS")
-        #print(self.weights)
+        weights = self.generate_weights_from_values(values, self.size)
         self.weights += weights
 
     def async_update_until_steady(self):
@@ -237,4 +279,5 @@ class Hopfield:
         self.values = self.perturbed_nodes
 
     def generate_random_image(self):
-        return np.random.choice([-1, 1], size=self.n)
+        return np.random.choice([-1.0, 1.0], size=self.n)
+    
