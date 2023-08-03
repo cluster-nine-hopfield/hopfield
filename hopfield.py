@@ -129,7 +129,7 @@ class Hopfield:
                 os.remove(image)
 
     def train_on_values(self, storkey = False):
-        if storkey == False:
+        if not storkey:
             self.weights = self.generate_weights_from_values(self.values, self.size)
         else:
             self.storkey_train(self.values)
@@ -163,6 +163,21 @@ class Hopfield:
                 term = (1.0/self.size) * term
 
                 self.weights[i][j] += term 
+
+        # W_i = self.weights
+        # M = np.outer(W_i, array)
+        # np.fill_diagonal(M, 0)
+
+        # K = M.sum(axis=1)
+        # K = K[:, np.newaxis]
+
+        # term = np.einsum('i,j->ij', array, array) - np.multiply(array, K) - np.multiply(K, array.T)
+        # term *= 1.0 / self.size
+
+        # self.weights += term
+        
+        
+
      
 
     def perturb(self, num, replace=False):
@@ -207,11 +222,11 @@ class Hopfield:
 
     @staticmethod
     def generate_weights_from_values(values, size):
-        weights = np.zeros(shape=(len(values), len(values)))
-        for i in range(len(values)):
-            for j in range(len(values)):
-                weights[i][j] = (i != j) * values[i] * values[j] * (1.0/size)
-        return weights 
+
+        
+        weights = np.outer(values, values) * (1.0 / size)
+        np.fill_diagonal(weights, 0)
+        return weights
 
     @staticmethod
     def hamming_distance(values1, values2):
@@ -232,7 +247,7 @@ class Hopfield:
                 self.do_synchronous_update()
                 #print(self.values)
                 count += 1
-                iterations.append(list(self.values))
+                iterations.append(self.energy_function())
                 if self.is_steady():
                     break
             
@@ -272,3 +287,11 @@ class Hopfield:
 
     def generate_random_image(self):
         return np.random.choice([-1, 1], size=self.n)
+    
+    def energy_function(self):
+        sum = 0.0
+        for i in range(self.size):
+            for j in range(self.size):
+                sum += self.weights[i][j] * self.values[i] * self.values[j]
+
+        return sum * -0.5
