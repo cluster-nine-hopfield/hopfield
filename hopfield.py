@@ -206,7 +206,7 @@ class Hopfield:
         return (image_array.shape, image_array.flatten())
 
     @staticmethod
-    def generate_weights_from_values(values, size):
+    def generate_weights_from_values(values, size=1):
         weights = np.zeros(shape=(len(values), len(values)))
         for i in range(len(values)):
             for j in range(len(values)):
@@ -268,7 +268,3 @@ class Hopfield:
 
     def generate_random_image(self):
         return np.random.choice([-1.0, 1.0], size=self.n)
-    
-
-    def generate_random_image(self):
-        return np.random.choice([-1, 1], size=self.n)
