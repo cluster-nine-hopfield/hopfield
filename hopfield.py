@@ -164,6 +164,8 @@ class Hopfield:
 
                 self.weights[i][j] += term 
 
+        np.fill_diagonal(self.weights,0)
+
         # W_i = self.weights
         # M = np.outer(W_i, array)
         # np.fill_diagonal(M, 0)
